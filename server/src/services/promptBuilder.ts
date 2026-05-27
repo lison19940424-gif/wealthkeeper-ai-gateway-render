@@ -44,22 +44,33 @@ function providerPrompt(provider: AIProvider, answerStyle: string): string {
   ].join("\n");
 }
 
-function trimContext(context: Record<string, unknown>, provider: AIProvider): Record<string, unknown> {
+function trimContext(context: Record<string, unknown>, _provider: AIProvider): Record<string, unknown> {
   return {
     period: context.period,
     totalAssets: context.totalAssets,
     totalLiabilities: context.totalLiabilities,
     netWorth: context.netWorth,
+    netWorthDailyChange: context.netWorthDailyChange,
     monthlyIncome: context.monthlyIncome,
     monthlyExpense: context.monthlyExpense,
     monthlyBalance: context.monthlyBalance,
+    expenseChangeFromLastMonth: context.expenseChangeFromLastMonth,
     topExpensePrimaryCategories: take(context.topExpensePrimaryCategories ?? context.topExpenseCategories, 10),
     topExpenseSecondaryCategories: take(context.topExpenseSecondaryCategories ?? context.topSecondaryCategories, 10),
-    topMerchants: take(context.topMerchants, 5),
-    recentLargeTransactions: take(context.recentLargeTransactions, 8),
+    topMerchants: take(context.topMerchants, 8),
+    recentLargeTransactions: take(context.recentLargeTransactions, 10),
+    recentTransactions: take(context.recentTransactions, 60),
+    unusualSpendingSignals: take(context.unusualSpendingSignals, 10),
     assetAllocation: take(context.assetAllocation, 10),
+    stockHoldings: take(context.stockHoldings, 60),
+    fundHoldings: take(context.fundHoldings, 60),
+    optionHoldings: take(context.optionHoldings, 40),
+    cryptoHoldings: take(context.cryptoHoldings, 40),
+    metalHoldings: take(context.metalHoldings, 30),
     vehicleAssets: take(context.vehicleAssets, 8),
     propertyAssets: take(context.propertyAssets, 8),
+    cashAccountDetails: take(context.cashAccountDetails, 30),
+    liabilityDetails: take(context.liabilityDetails, 30),
     investmentDailyPnl: context.investmentDailyPnl,
     investmentTotalPnl: context.investmentTotalPnl,
     fundDCAPlanSummary: take(context.fundDCAPlanSummary, 8),
