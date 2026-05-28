@@ -164,7 +164,9 @@ async function fetchOneSymbol(symbol: string): Promise<[string, MarketDataPoint]
       currency: typeof quote.currency === "string" ? quote.currency : null,
       fetchedAt,
     }];
-  } catch {
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`[marketDataEnricher] FAIL ${symbol}: ${msg}`);
     return [symbol, empty];
   }
 }
