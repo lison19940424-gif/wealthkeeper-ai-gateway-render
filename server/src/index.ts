@@ -16,7 +16,7 @@ app.get("/health", (_req, res) => {
     ok: true,
     service: "WealthKeeper AI Gateway",
     provider: "deepseek",
-    version: "1.3.0"
+    version: "1.3.1"
   });
 });
 
