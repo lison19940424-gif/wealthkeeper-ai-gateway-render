@@ -16,7 +16,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
-  },
-  "devDependencies": {}
+    "typescript": "^5.7.2",
+    "yahoo-finance2": "^3.14.1"
+  }
 }

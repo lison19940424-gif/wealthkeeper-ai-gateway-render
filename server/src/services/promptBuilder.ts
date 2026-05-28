@@ -1,4 +1,5 @@
 import type { AIChatMessage, AIChatRequest, AIProvider } from "../types/ai.js";
+import { formatMarketDataForPrompt, type MarketDataMap } from "./marketDataEnricher.js";
 
 const basePrinciples = [
   "你是 WealthKeeper 的个人财富分析助手。",
@@ -20,6 +21,10 @@ export function buildMessages(request: AIChatRequest, provider: AIProvider): AIC
     .filter((item) => item.role === "user" || item.role === "assistant")
     .slice(-8);
 
+  const marketSection = formatMarketDataForPrompt(
+    (request.context?.marketData ?? {}) as MarketDataMap
+  );
+
   return [
     { role: "system", content: systemPrompt },
     ...history,
@@ -27,6 +32,7 @@ export function buildMessages(request: AIChatRequest, provider: AIProvider): AIC
       role: "user",
       content: [
         `用户问题：${question}`,
+        ...(marketSection ? [marketSection] : []),
         "财务摘要 JSON：",
         JSON.stringify(context)
       ].join("\n")
