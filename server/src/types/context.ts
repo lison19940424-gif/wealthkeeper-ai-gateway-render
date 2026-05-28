@@ -15,5 +15,7 @@ export interface HoldingDetail {
 export interface FinancialContextSnapshot {
   stockHoldings?: HoldingDetail[];
   fundHoldings?: HoldingDetail[];
+  optionHoldings?: HoldingDetail[];
+  cryptoHoldings?: HoldingDetail[];
   [key: string]: unknown;
 }
