@@ -1,4 +1,5 @@
 import { GatewayError, type AIChatMessage, type AIChatRequest, type AIChatResponse } from "../types/ai.js";
+import { enrichMarketData } from "./marketDataEnricher.js";
 import { buildMessages } from "./promptBuilder.js";
 import { normalizeAIResponse } from "./responseNormalizer.js";
 
@@ -22,6 +23,7 @@ export async function callDeepSeek(request: AIChatRequest, model: string): Promi
 
   const baseURL = (process.env.DEEPSEEK_BASE_URL?.trim() || "https://api.deepseek.com").replace(/\/+$/, "");
   const url = `${baseURL}/chat/completions`;
+  const enrichedRequest = await enrichRequestWithMarketData(request);
 
   let response: Response;
   try {
@@ -33,7 +35,7 @@ export async function callDeepSeek(request: AIChatRequest, model: string): Promi
       },
       body: JSON.stringify({
         model,
-        messages: buildMessages(request, "deepseek") as AIChatMessage[],
+        messages: buildMessages(enrichedRequest, "deepseek") as AIChatMessage[],
         temperature: 0.2,
         stream: false
       })
@@ -61,4 +63,17 @@ export async function callDeepSeek(request: AIChatRequest, model: string): Promi
   }
 
   return normalizeAIResponse(content);
+}
+
+async function enrichRequestWithMarketData(request: AIChatRequest): Promise<AIChatRequest> {
+  const context = request.context ?? {};
+  const marketData = await enrichMarketData(context).catch(() => ({}));
+  if (!marketData || Object.keys(marketData).length === 0) return request;
+  return {
+    ...request,
+    context: {
+      ...context,
+      marketData
+    }
+  };
 }
