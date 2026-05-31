@@ -1,5 +1,5 @@
 import { GatewayError, type AIChatMessage, type AIChatRequest, type AIChatResponse } from "../types/ai.js";
-import { enrichMarketData } from "./marketDataEnricher.js";
+import { buildSimpleMarketData } from "./simpleMarketDataService.js";
 import { buildMessages } from "./promptBuilder.js";
 import { normalizeAIResponse } from "./responseNormalizer.js";
 
@@ -67,8 +67,8 @@ export async function callDeepSeek(request: AIChatRequest, model: string): Promi
 
 async function enrichRequestWithMarketData(request: AIChatRequest): Promise<AIChatRequest> {
   const context = request.context ?? {};
-  const marketData = await enrichMarketData(context).catch(() => ({}));
-  if (!marketData || Object.keys(marketData).length === 0) return request;
+  const marketData = await buildSimpleMarketData(context).catch(() => ({}));
+  if (Object.keys(marketData).length === 0) return request;
   return {
     ...request,
     context: {

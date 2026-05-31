@@ -86,7 +86,8 @@ function trimContext(context: Record<string, unknown>, _provider: AIProvider): R
     liquidityBuffer: context.liquidityBuffer,
     leverageRatio: context.leverageRatio,
     riskSignals: take(context.riskSignals, 10),
-    dataQualityNotes: take(context.dataQualityNotes, 10)
+    dataQualityNotes: take(context.dataQualityNotes, 10),
+    marketData: context.marketData
   };
 }
 
